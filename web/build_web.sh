@@ -12,5 +12,6 @@ for f in $(find . -name '*.c' -not -path './libs/*' -not -path './linux/*' -not 
 done
 # ASYNCIFY: the game uses blocking loops; this lets them yield to the browser.
 emcc /tmp/drobj/*.o -o $OUT/index.html -sUSE_SDL=1 -sLEGACY_GL_EMULATION=1 -sALLOW_MEMORY_GROWTH=1 \
-  -sASYNCIFY -sFORCE_FILESYSTEM=1 -lidbfs.js -Wl,--allow-multiple-definition
+  -sASYNCIFY -sFORCE_FILESYSTEM=1 -sINVOKE_RUN=0 -sSINGLE_FILE=1 -sEXPORTED_RUNTIME_METHODS=FS,callMain \
+  --shell-file web/shell.html -Wl,--allow-multiple-definition
 echo "OK -> $OUT/index.html"

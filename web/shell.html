@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="tr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>DreeRally Web (test)</title>
+<style>
+:root{--bg:#fff;--fg:#1a1a1a;--card:#f2f2f2;--mut:#666;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#111;--fg:#eee;--card:#1e1e1e;--mut:#9a9a9a}}
+html,body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.4 system-ui,sans-serif}
+main{max-width:720px;margin:0 auto;padding:16px}
+canvas{display:block;width:100%;max-width:640px;aspect-ratio:4/3;background:#000;margin:12px auto}
+.card{background:var(--card);border-radius:12px;padding:12px;margin:12px 0}
+button,input{font:inherit}button{padding:10px 16px;border-radius:8px;border:0;background:#c0392b;color:#fff}
+#log{white-space:pre-wrap;font:12px/1.3 ui-monospace,monospace;color:var(--mut);max-height:160px;overflow:auto}
+</style></head><body><main>
+<h2>DreeRally – Web testi</h2>
+<div class="card"><p>Orijinal <b>Death Rally</b> dosyalarını seç (kendi kopyan). Dosyalar sadece tarayıcında kalır, hiçbir yere yüklenmez.</p>
+<input id="files" type="file" multiple><br><br><button id="start" disabled>Başlat</button> <span id="count"></span></div>
+<canvas id="canvas" tabindex="-1" oncontextmenu="event.preventDefault()"></canvas>
+<div class="card"><div id="log">Hazır. Dosyaları seçin.</div></div>
+</main>
+<script>
+var logEl=document.getElementById('log');
+function L(t){logEl.textContent+="\n"+t;logEl.scrollTop=logEl.scrollHeight}
+var Module={noInitialRun:true,canvas:document.getElementById('canvas'),
+ print:function(t){L(t)},printErr:function(t){L(t)},
+ onRuntimeInitialized:function(){L('Motor yüklendi.');document.getElementById('start').disabled=false}};
+var picked=[];
+document.getElementById('files').addEventListener('change',function(e){picked=[].slice.call(e.target.files);
+ document.getElementById('count').textContent=picked.length+' dosya'});
+document.getElementById('start').addEventListener('click',async function(){
+ this.disabled=true;
+ for(const f of picked){const n=(f.webkitRelativePath||f.name).split('/').slice(-1)[0].toUpperCase();
+  Module.FS.writeFile('/'+n,new Uint8Array(await f.arrayBuffer()))}
+ Module.FS.chdir('/');L('Oyun başlatılıyor ('+picked.length+' dosya)...');
+ try{Module.callMain([])}catch(err){L('Hata: '+err)}});
+</script>
+{{{ SCRIPT }}}
+</body></html>
