@@ -178,7 +178,7 @@ char sub_418090();
 int transformJoystickReadValue_418150();
 
 int   setPaletteValueWithFloats(double, double, double); // idb
-int   sub_418B00(float, float, float); // idb
+int   sub_418B00(double, double, double); // idb
 
 int   loadPaletteMenu();
 signed int isVesaCompatible();
@@ -324,7 +324,7 @@ int   sub_43FF90(int* a1, int a2);
 //-------------------------------------------------------------------------
 // Data declarations
 
-  FILE iob[1024];
+  // iob (MSVC stdio hack) removed for portability
   const unsigned __int16 pctype[256];
   int _mb_cur_max;
 char dukeNukemName[12] = "DUKE NUKEM"; // weak //DUKE
@@ -16983,7 +16983,7 @@ int  initSystem(double fmodMinVersion, int a1, char **a2, char *args)
 
 int   logError(int a1, int a2)
 {
-  return fprintf((FILE *)&iob[0] + 2, aSS, a1, a2);
+  return fprintf(stderr, aSS, a1, a2);
   //return fprintf((FILE *)iob[0]._ptr + 2, aSS, a1, a2);
 }
 
